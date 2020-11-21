@@ -1,5 +1,6 @@
 package marcusvoltolim.example.enum_generic_converter;
 
+import marcusvoltolim.example.enum_generic_converter.enums.EnumsConverters;
 import marcusvoltolim.example.enum_generic_converter.enums.UserType;
 import marcusvoltolim.example.enum_generic_converter.model.User;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @DataJpaTest
 class EnumGenericConverterTest {
@@ -29,7 +31,6 @@ class EnumGenericConverterTest {
 			.isNotEqualTo(UserType.ADMIN.ordinal())
 			.isNotEqualTo(UserType.ADMIN.name());
 	}
-
 
 	@Test
 	void usingOrdinalValue() {
@@ -58,6 +59,11 @@ class EnumGenericConverterTest {
 			.isNotEqualTo(UserType.ADMIN.getId())
 			.isNotEqualTo(UserType.ADMIN.ordinal())
 			.isEqualTo(UserType.ADMIN.name());
+	}
+
+	@Test
+	void nullValue() {
+		assertNull(EnumsConverters.AbstractPersistableEnumConverter.fromId(null, UserType.values()));
 	}
 
 }

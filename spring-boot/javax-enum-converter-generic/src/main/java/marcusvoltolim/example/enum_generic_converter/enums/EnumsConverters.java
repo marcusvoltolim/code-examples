@@ -1,6 +1,7 @@
 package marcusvoltolim.example.enum_generic_converter.enums;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -25,14 +26,13 @@ public interface EnumsConverters {
 
 		@Override
 		public E convertToEntityAttribute(I dbData) {
-			return Objects.isNull(dbData) ? null : fromId(dbData);
+			return fromId(dbData, enumConstants);
 		}
 
-		private E fromId(@NonNull I id) {
-			return Stream.of(enumConstants)
-						 .filter(e -> e.getId().equals(id))
-						 .findAny()
-						 .orElse(null);
+		public static <E extends Enum<E> & PersistableEnum<I>, I> E fromId(I idValue, E[] enumConstants) {
+			return Optional.ofNullable(idValue).flatMap(id -> Stream.of(enumConstants)
+																	.filter(e -> e.getId().equals(id))
+																	.findAny()).orElse(null);
 		}
 
 	}
